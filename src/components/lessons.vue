@@ -31,6 +31,18 @@
         </div>
     </div>
     <div v-else>
+        <hr />
+        <div class="m-3">
+            <add-theme-button
+                :class_id="getSelectedClass"
+                :subject_id="getSelectedSubject"
+            />
+            <remove-theme-button
+                :class_id="getSelectedClass"
+                :subject_id="getSelectedSubject"
+            />
+        </div>
+
         <div v-if="getAllLessons.length < 1" class="text-center">
             <div
                 class="container-fluid d-flex justify-content-center align-items-center overflow-hidden"
@@ -64,9 +76,11 @@
 import { defineComponent } from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 import theme_component from '@/components/theme.component.vue';
+import addThemeButton from './addTheme.button.vue';
+import RemoveThemeButton from './removeTheme.button.vue';
 export default defineComponent({
     name: 'Lesson-view',
-    components: { theme_component },
+    components: { theme_component, addThemeButton, RemoveThemeButton },
     computed: {
         ...mapGetters({
             getSelectedSubject: 'subject/getSelectedSubject',

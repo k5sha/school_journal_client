@@ -4,9 +4,11 @@
         <!-- Sidebar -->
         <nav
             id="sidebarMenu"
-            class="collapse d-lg-block sidebar collapse bg-white"
+            class="d-lg-block sidebar collapse bg-white"
+            :class="{ show: isShow }"
+            @click="$emit('toggle-sidebar')"
         >
-            <div class="position-sticky">
+            <div class="position-sticky" @click.stop="">
                 <div
                     v-if="status.loggedIn"
                     class="list-group list-group-flush mx-3 mt-4"
@@ -18,13 +20,15 @@
                             ><strong>{{
                                 ` ${user.first_name} ${user.last_name} `
                             }}</strong
-                            >{{ isTeacher ? 'Вчитель' : 'Учень' }}</span
-                        >
+                            >{{ !isTeacher && !isAdmin ? 'Учень' : ' ' }}
+                            {{ isTeacher && !isAdmin ? 'Вчитель' : ' ' }}
+                            {{ isAdmin ? 'Адміністратор' : ' ' }}
+                        </span>
                     </div>
                     <router-link
                         to="/"
                         class="list-group-item list-group-item-action py-2 ripple"
-                        aria-current="true"
+                        @click="$emit('toggle-sidebar')"
                     >
                         <font-awesome-icon
                             class="me-3"
@@ -35,6 +39,7 @@
                     <router-link
                         to="/journal"
                         class="list-group-item list-group-item-action py-2 ripple"
+                        @click="$emit('toggle-sidebar')"
                     >
                         <font-awesome-icon
                             class="me-3"
@@ -42,12 +47,22 @@
                         />
                         <span>Щоденник</span>
                     </router-link>
+                    <router-link
+                        v-if="isAdmin"
+                        to="/admin/panel"
+                        class="list-group-item list-group-item-action py-2 ripple"
+                        @click="$emit('toggle-sidebar')"
+                        ><font-awesome-icon
+                            class="me-3"
+                            :icon="['fas', 'gear']"
+                        /><span>Адміністрування</span></router-link
+                    >
                 </div>
                 <div v-else class="list-group list-group-flush mx-3 mt-4">
                     <router-link
                         to="/"
                         class="list-group-item list-group-item-action py-2 ripple"
-                        aria-current="true"
+                        @click="$emit('toggle-sidebar')"
                     >
                         <font-awesome-icon
                             class="me-3"
@@ -58,6 +73,7 @@
                     <router-link
                         to="/auth/login"
                         class="list-group-item list-group-item-action py-2 ripple"
+                        @click="$emit('toggle-sidebar')"
                     >
                         <font-awesome-icon
                             class="me-3"
@@ -89,10 +105,10 @@ export default defineComponent({
     name: 'SideBar',
     computed: {
         ...mapState('account', ['status', 'user']),
-        ...mapGetters('account', ['isTeacher'])
+        ...mapGetters('account', ['isTeacher', 'isAdmin'])
     },
-    mounted() {
-        console.log();
+    props: {
+        isShow: Boolean
     }
 });
 </script>
@@ -113,6 +129,23 @@ export default defineComponent({
 @media (max-width: 991.98px) {
     .sidebar {
         width: 100%;
+        margin-top: 58px;
+    }
+
+    @keyframes animate-show {
+        from {
+            height: 0px;
+            opacity: 0;
+        }
+        to {
+            height: 100vh;
+            opacity: 1;
+        }
+    }
+
+    .show {
+        animation-name: animate-show;
+        animation-duration: 0.6s;
     }
 }
 .sidebar .active {

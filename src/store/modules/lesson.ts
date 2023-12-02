@@ -1,5 +1,6 @@
 import { lessonService } from '@/services/lesson.service';
 import { ActionContext, Commit, Dispatch } from 'vuex';
+import handleErrors from '../utils/handleErrors';
 
 export interface LessonInterface {
     id: number;
@@ -7,6 +8,8 @@ export interface LessonInterface {
     date: Date;
     title: string;
     themeId: number;
+    updatedAt: Date;
+    createdAt: Date;
 }
 export interface LessonState {
     lessons: LessonInterface[];
@@ -24,8 +27,8 @@ const actions = {
             (lessons) => {
                 commit('setLessons', lessons);
             },
-            (error) => {
-                dispatch('alert/error', error, { root: true });
+            (error: Error) => {
+                handleErrors(error, dispatch);
             }
         );
     },
@@ -47,8 +50,46 @@ const actions = {
                     root: true
                 });
             },
-            (error) => {
-                dispatch('alert/error', error, { root: true });
+            (error: Error) => {
+                handleErrors(error, dispatch);
+            }
+        );
+    },
+    async editLesson(
+        { dispatch, commit }: ActionContext<Dispatch, Commit>,
+        lesson: LessonInterface
+    ) {
+        lessonService.editLesson(lesson).then(
+            () => {
+                commit('editLesson', lesson);
+                dispatch('theme/editLessonFromTheme', lesson, {
+                    root: true
+                });
+                dispatch('alert/success', 'Заняття успішно зміненно', {
+                    root: true
+                });
+            },
+            (error: Error) => {
+                handleErrors(error, dispatch);
+            }
+        );
+    },
+    async addLesson(
+        { dispatch, commit }: ActionContext<Dispatch, Commit>,
+        lesson: LessonInterface
+    ) {
+        lessonService.createLesson(lesson).then(
+            (createdLesson) => {
+                commit('addLesson', createdLesson);
+                dispatch('theme/addLessonFromTheme', createdLesson, {
+                    root: true
+                });
+                dispatch('alert/success', 'Заняття успішно створенно', {
+                    root: true
+                });
+            },
+            (error: Error) => {
+                handleErrors(error, dispatch);
             }
         );
     }
@@ -62,6 +103,16 @@ const mutations = {
         state.lessons = state.lessons.filter(function (e) {
             return e.id !== lesson_id;
         });
+    },
+    editLesson(state: LessonState, editedLesson: LessonInterface) {
+        state.lessons[
+            state.lessons.findIndex((lesson) => lesson.id == editedLesson.id)
+        ] = editedLesson;
+        // eslint-disable-next-line no-self-assign
+        state.lessons = state.lessons;
+    },
+    addLesson(state: LessonState, createdLesson: LessonInterface) {
+        state.lessons.push(createdLesson);
     }
 };
 

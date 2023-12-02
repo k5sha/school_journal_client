@@ -1,12 +1,13 @@
 import { userService } from '@/services/user.service';
 import { ActionContext, Commit, Dispatch } from 'vuex';
 import router from '@/router';
+import handleErrors from '../utils/handleErrors';
 
 interface Role {
     id: number;
     title: string;
 }
-interface User {
+export interface User {
     id: number;
     username: string;
     first_name: string;
@@ -43,11 +44,19 @@ const actions = {
         userService.login(username, password).then(
             (user) => {
                 commit('loginSuccess', user.user);
-                router.push('/');
+                router.push('/').then(() => {
+                    dispatch(
+                        'alert/success',
+                        `👋 ${user.user.first_name} ${user.user.last_name}`,
+                        {
+                            root: true
+                        }
+                    );
+                });
             },
-            (error) => {
+            (error: Error) => {
+                handleErrors(error, dispatch);
                 commit('loginFailure', error);
-                dispatch('alert/error', error, { root: true });
             }
         );
     },
@@ -86,6 +95,10 @@ const getters = {
     isTeacher(state: AcountState) {
         if (state.user == null) return;
         return state.user.roles.some((role) => role.title == 'TEACHER');
+    },
+    isAdmin(state: AcountState) {
+        if (state.user == null) return;
+        return state.user.roles.some((role) => role.title == 'ADMIN');
     }
 };
 

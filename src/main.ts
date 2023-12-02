@@ -26,6 +26,10 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faGears } from '@fortawesome/free-solid-svg-icons';
+
 library.add(
     faBell,
     faHouse,
@@ -36,7 +40,10 @@ library.add(
     faUser,
     faEdit,
     faTrash,
-    faInfo
+    faInfo,
+    faCircleExclamation,
+    faCheck,
+    faGears
 );
 
 // Main
