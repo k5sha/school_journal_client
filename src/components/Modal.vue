@@ -1,6 +1,7 @@
 <template>
-    <transition name="modal-fade">
+    <transition name="fade">
         <div class="modal-backdrop" @click="close">
+            <div class="p-4 no-close-area" @click.stop=""></div>
             <div
                 class="modal"
                 role="dialog"
@@ -44,7 +45,20 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.no-close-area {
+    z-index: -2;
+    cursor: default;
+    width: auto;
+    height: auto;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    min-width: 756px;
+    min-height: 256px;
+}
 .modal-backdrop {
+    cursor: pointer;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -59,6 +73,7 @@ export default defineComponent({
 }
 
 .modal {
+    cursor: default;
     z-index: -1;
     max-width: 756px;
     max-height: 756px;
@@ -101,13 +116,13 @@ export default defineComponent({
     background: transparent;
 }
 
-.modal-fade-enter,
-.modal-fade-leave-to {
-    opacity: 0;
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
 }
 
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-    transition: opacity 0.5s ease;
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

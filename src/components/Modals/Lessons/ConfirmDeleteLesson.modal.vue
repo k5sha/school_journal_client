@@ -1,6 +1,6 @@
 <template>
     <Modal v-show="visible" @close="closeDeleteModal">
-        <template v-slot:header> Підтвердження </template>
+        <template v-slot:header> Підтвердження 🔴</template>
         <template v-slot:text>
             Ви впевнені, що хочете видалити цей урок?
             <hr />
@@ -14,10 +14,11 @@
         </template>
     </Modal>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { mapActions } from 'vuex';
-import Modal from '../Modal.vue';
-export default {
+import Modal from '../../Modal.vue';
+export default defineComponent({
     name: 'delete_lesson_modal',
     components: {
         Modal
@@ -44,7 +45,7 @@ export default {
             this.$emit('hide-delete-modal');
         }
     }
-};
+});
 </script>
 
 <style scoped></style>

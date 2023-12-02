@@ -1,5 +1,6 @@
 import { subjectService } from '@/services/subject.service';
 import { ActionContext, Commit, Dispatch } from 'vuex';
+import handleErrors from '../utils/handleErrors';
 
 interface Subject {
     id: number;
@@ -20,8 +21,8 @@ const actions = {
             (subjects) => {
                 commit('setSubjects', subjects);
             },
-            (error) => {
-                dispatch('alert/error', error, { root: true });
+            (error: Error) => {
+                handleErrors(error, dispatch);
             }
         );
     },
@@ -33,8 +34,8 @@ const actions = {
             (subjects: Subject[]) => {
                 commit('setSubjects', subjects);
             },
-            (error) => {
-                dispatch('alert/error', error, { root: true });
+            (error: Error) => {
+                handleErrors(error, dispatch);
             }
         );
     },
@@ -43,6 +44,25 @@ const actions = {
         subject: Subject
     ) {
         commit('selectSubject', subject);
+    },
+    async createSubject(
+        { dispatch }: { dispatch: Dispatch },
+        subject: { title: string }
+    ) {
+        subjectService.create(subject).then(
+            () => {
+                dispatch(
+                    'alert/success',
+                    `${subject.title} успішно додана до списку предметів`,
+                    {
+                        root: true
+                    }
+                );
+            },
+            (error: Error) => {
+                handleErrors(error, dispatch);
+            }
+        );
     }
 };
 

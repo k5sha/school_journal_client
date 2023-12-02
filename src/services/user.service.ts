@@ -1,8 +1,11 @@
 import handleResponse from '@/services/utils/handleResponse';
+import authHeader from './utils/authHeader';
+import { UserRegisterInterface } from '@/store/modules/users';
 
 export const userService = {
     login,
-    logout
+    logout,
+    registration
 };
 
 function login(username: string, password: string) {
@@ -24,6 +27,18 @@ function login(username: string, password: string) {
 
             return user;
         });
+}
+
+function registration(user: UserRegisterInterface) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+    };
+    return fetch(
+        `${process.env.VUE_APP_SERVER_ADDRESS}auth/registration`,
+        requestOptions
+    ).then(handleResponse);
 }
 
 function logout() {

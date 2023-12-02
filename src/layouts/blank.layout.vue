@@ -8,7 +8,11 @@
             </div>
         </div>
     </nav>
-    <alertbox />
+    <div
+        class="container-fluid d-flex justify-content-center align-items-center"
+    >
+        <alertbox />
+    </div>
     <router-view />
 </template>
 
@@ -19,3 +23,13 @@ export default {
     name: 'blank_layout'
 };
 </script>
+
+<style>
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+}
+</style>

@@ -9,11 +9,7 @@
             <button
                 class="navbar-toggler me-4"
                 type="button"
-                data-bs-toggle="collapse"
-                href="#sidebarMenu"
-                aria-controls="sidebarMenu"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
+                @click="$emit('toggle-sidebar')"
             >
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -51,16 +47,11 @@
                         class="dropdown-menu dropdown-menu-end"
                         aria-labelledby="navbarDropdownMenuLink"
                     >
-                        <li>
-                            <a class="dropdown-item" href="#">Some news</a>
+                        <li @click="dev">
+                            <p class="dropdown-item">Новини</p>
                         </li>
-                        <li>
-                            <a class="dropdown-item" href="#">Another news</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#"
-                                >Something else here</a
-                            >
+                        <li @click="dev">
+                            <p class="dropdown-item">Журнал</p>
                         </li>
                     </ul>
                 </li>
@@ -147,12 +138,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default defineComponent({
     name: 'NavBar',
     computed: {
         ...mapState('account', ['status', 'user'])
+    },
+    methods: {
+        ...mapActions('alert', ['dev'])
     }
 });
 </script>

@@ -1,5 +1,6 @@
 import { classesService } from '@/services/classes.service';
 import { ActionContext, Commit, Dispatch } from 'vuex';
+import handleErrors from '../utils/handleErrors';
 
 interface Class_ {
     id: number;
@@ -20,8 +21,8 @@ const actions = {
             (classes) => {
                 commit('setClasses', classes);
             },
-            (error) => {
-                dispatch('alert/error', error, { root: true });
+            (error: Error) => {
+                handleErrors(error, dispatch);
             }
         );
     },
@@ -31,6 +32,25 @@ const actions = {
     ) {
         dispatch('subject/selectSubject', { id: 0 }, { root: true });
         commit('selectClass', class_);
+    },
+    async createClass(
+        { dispatch }: { dispatch: Dispatch },
+        class_: { title: string }
+    ) {
+        classesService.create(class_).then(
+            () => {
+                dispatch(
+                    'alert/success',
+                    `${class_.title} успішно додана до списку класів`,
+                    {
+                        root: true
+                    }
+                );
+            },
+            (error: Error) => {
+                handleErrors(error, dispatch);
+            }
+        );
     }
 };
 

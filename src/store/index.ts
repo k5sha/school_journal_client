@@ -5,8 +5,9 @@ import { subject } from '@/store/modules/subject';
 import { classes } from '@/store/modules/classes';
 import { lesson } from '@/store/modules/lesson';
 import { student } from '@/store/modules/students';
-import { theme } from './modules/theme';
+import { theme } from '@/store/modules/theme';
+import { users } from '@/store/modules/users';
 
 export default createStore({
-    modules: { account, alert, subject, classes, lesson, student, theme }
+    modules: { account, alert, subject, classes, lesson, student, theme, users }
 });

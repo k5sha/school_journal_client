@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import home_layout from '@/layouts/home.layout.vue';
 import blank_layout from '@/layouts/blank.layout.vue';
 import LoginView from '@/views/LoginView.vue';
+import { User } from '@/store/modules/account';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -41,6 +42,11 @@ const routes: Array<RouteRecordRaw> = [
                 path: '/profile',
                 name: 'ProfilePage',
                 component: () => import('../views/ProfileView.vue')
+            },
+            {
+                path: '/admin/panel',
+                name: 'AdminPanel',
+                component: () => import('../views/AdminPaneView.vue')
             }
         ]
     },
@@ -72,6 +78,19 @@ router.beforeEach((to, from, next) => {
 
     if (authRequired && !loggedIn) {
         return next('/auth/login');
+    }
+
+    if (loggedIn) {
+        const adminPages = ['/admin/panel'];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const user: User = JSON.parse(loggedIn!).user;
+
+        if (
+            adminPages.includes(to.path) &&
+            !user.roles.some((role) => role.title == 'ADMIN')
+        ) {
+            return next('/');
+        }
     }
 
     next();
